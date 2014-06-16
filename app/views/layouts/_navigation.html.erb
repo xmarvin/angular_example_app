@@ -1,0 +1,12 @@
+<div ng-controller="NavigationController as ctrl">
+    <div class="header">
+      <ul class="nav nav-tabs">
+        <li ng-class="{active: ctrl.activetab != 'search'}">
+          <a href="/#" data-target="#" data-toggle="tab">List</a>
+        </li>
+        <li ng-class="{active: ctrl.activetab == 'search'}">
+          <a href="/#search" data-target="#search" data-toggle="tab">Search</a>
+        </li>
+        </ul>
+    </div>
+</div>

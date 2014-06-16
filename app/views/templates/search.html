@@ -1,0 +1,29 @@
+<div>
+    <input type="text" placeholder="Filter..." >
+</div>
+<table class="table bordered">
+    <thead>
+    <tr>
+        <td>Name</td>
+        <td>Job title</td>
+        <td>Age</td>
+        <td>Grade</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="member in members">
+        <td>
+          {{ member.name}}
+        </td>
+        <td>
+            {{ member.job}}
+        </td>
+        <td>
+            {{ member.age}}
+        </td>
+        <td>
+            {{ member.grade}}
+        </td>
+    </tr>
+    </tbody>
+</table>
