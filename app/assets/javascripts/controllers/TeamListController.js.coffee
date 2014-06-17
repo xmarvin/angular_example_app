@@ -1,4 +1,4 @@
-angular.module('teamApp').controller "TeamListController", ($scope, Team, Member) ->
+angular.module('teamApp').controller "TeamListController", ($scope, TeamService) ->
 
   serverErrorHandler = (res,error) ->
     err = "There was a server error, please reload the page and try again."
@@ -11,7 +11,7 @@ angular.module('teamApp').controller "TeamListController", ($scope, Team, Member
     if $scope.activeTeam == null && $scope.teams.length > 0
       $scope.activateTeam $scope.teams[0]
 
-  @teamsService = new Team(serverErrorHandler)
+  @teamsService = new TeamService(serverErrorHandler)
 
   @teamsService.all (res) ->
     $scope.teams = res
@@ -46,6 +46,12 @@ angular.module('teamApp').controller "TeamListController", ($scope, Team, Member
   $scope.addToActiveTeam = (member) =>
     if $scope.activeTeam
       @teamsService.createTeamMember $scope.activeTeam, member.id
+    false
+
+  $scope.deleteFromActiveTeam = (team, $index) =>
+    console.log $index
+    if $scope.activeTeam
+      @teamsService.deleteTeamMember $scope.activeTeam, $index
     false
 
   $scope.isMemberOfTeam = (member) =>

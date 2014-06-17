@@ -1,5 +1,5 @@
-angular.module('teamApp').factory 'Team', ($resource, $http, TeamMemberService) ->
-  class Team
+angular.module('teamApp').factory 'TeamService', ($resource, $http, TeamMemberService) ->
+  class TeamService
     constructor: (errorHandler) ->
       @service = $resource('/api/teams/:id',
         {id: '@id'},
@@ -28,10 +28,27 @@ angular.module('teamApp').factory 'Team', ($resource, $http, TeamMemberService) 
         team.team_members_ids = $.map(res, (team_member) -> team_member.user_id)
         res
 
+    #Move to the Team model
     createTeamMember: (team, userId, successHandler) =>
       teamMembersService = new TeamMemberService(team.id, @errorHandler)
+
       teamMembersService.create { user_id: userId }, (team_member) ->
         team.team_members.unshift(team_member)
         team.team_members_ids ||= []
         team.team_members_ids.unshift(team_member.user_id)
+        team.team_members_length = team.team_members_ids.length
         successHandler(team_member) if successHandler
+
+    deleteTeamMember: (team, team_member_index, successHandler) =>
+      teamMembersService = new TeamMemberService(team.id, @errorHandler)
+      team_member = team.team_members[team_member_index]
+      if team_member
+        teamMembersService.delete team_member, (res) ->
+          team.team_members.splice(team_member_index, 1)
+          team.team_members_ids ||= []
+          ind = team.team_members_ids.indexOf(team_member.user_id)
+          if ind >= 0
+            team.team_members_ids.splice(ind, 1)
+
+          team.team_members_length = team.team_members_ids.length
+          successHandler(res) if successHandler

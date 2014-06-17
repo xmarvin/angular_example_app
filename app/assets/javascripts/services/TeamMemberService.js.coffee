@@ -17,5 +17,5 @@ angular.module('teamApp').factory 'TeamMemberService', ($resource, $http) ->
     create: (attrs, successHandler) =>
       new @service(team_member: attrs).$save successHandler, @errorHandler
 
-    delete: (team, successHandler) =>
-      new @service().$delete {id: team.id}, successHandler, @errorHandler
+    delete: (team_member, successHandler) =>
+      new @service().$delete {id: team_member.id}, successHandler, @errorHandler
