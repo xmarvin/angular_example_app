@@ -11,13 +11,14 @@
         <th></th>
     </tr>
     </thead>
+
     <tbody>
     <tr ng-repeat="member in members" ng-click="showReviews(member)">
         <td>
           {{ member.name}}
         </td>
         <td>
-            {{ member.job}}
+            {{ member.position}}
         </td>
         <td>
             {{ member.age}}
@@ -26,9 +27,18 @@
             {{ member.grade}}
         </td>
         <td>
-            <button ng-if="teamsCtrl.activeTeam != null" ng-click="addToActiveTeam(member); $event.stopPropagation();" class="btn btn-default btn-xs">
-                Add to <b>{{ teamsCtrl.activeTeam.name }}</b>
-            </button>
+            <div ng-if="teamsCtrl.activeTeam != null">
+
+                <div ng-if="isMemberOfTeam(member)">
+                    Member of <b>{{ teamsCtrl.activeTeam.name }}</b>
+                </div>
+
+                <button ng-if="!isMemberOfTeam(member)"  ng-click="addToActiveTeam(member); $event.stopPropagation();" class="btn btn-default btn-xs">
+                    Add to <b>{{ teamsCtrl.activeTeam.name }}</b>
+                </button>
+
+            </div>
+
         </td>
     </tr>
     </tbody>

@@ -2,7 +2,9 @@ Todo::Application.routes.draw do
   #devise_for :users
 
   namespace :api, defaults: {format: :json} do
-    resources :teams
+    resources :teams do
+      resources :team_members
+    end
     resources :users, only: :index
   end
 

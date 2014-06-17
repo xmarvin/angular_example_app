@@ -10,7 +10,7 @@
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pull-right right">
 
       <div class="container">
-        <form ng-submit="addTeam()">
+        <form ng-submit="addTeam()" style="margin-bottom: 10px;">
 
           <div class="input-group">
             <input type="text" class="form-control" placeholder="New team name" ng-model="teamName" data-non-blank>
@@ -18,8 +18,8 @@
             <input type="submit" class="btn btn-primary" value="+" ng-disabled="!canAddTeam()">
           </span>
           </div>
-
         </form>
+
         <div class="row">
           <div class="list-group">
             <div ng-repeat="team in teamsCtrl.teams">
@@ -30,14 +30,19 @@
 
               <div class="members" ng-show="isActive(team)">
                 <div>
-                  <div>members</div>
+                  <div ng-repeat="team_member in team.team_members">
+                    {{team_member.user.name}}
                 </div>
-                <div class="right">
+
+                <div class="row">
+                <div class="pull-right">
                   <button ng-click="deleteTeam(team, $index)" class="btn btn-default btn-xs btn-danger"
                           type="button">
                     Delete team
                   </button>
                 </div>
+                </div>
+
               </div>
 
             </div>

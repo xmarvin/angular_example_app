@@ -6,14 +6,7 @@ angular.module('teamApp').controller "SearchController", ($scope, $timeout, Memb
   $scope.members = []
   $scope.pagination = {}
 
-  $scope.addToActiveTeam = (member) =>
-    console.log "add to the team"
-    console.log(member)
-    false
-
   $scope.showReviews = (member) =>
-    console.log "loading reviews"
-    console.log(member)
 
 
   filterTextTimeout = null
