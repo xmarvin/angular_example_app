@@ -1,17 +1,18 @@
 <div>
-    <input type="text" placeholder="Filter..." >
+    <input class="form-control search-query" type="text" placeholder="Search..." >
 </div>
 <table class="table bordered">
     <thead>
     <tr>
-        <td>Name</td>
-        <td>Job title</td>
-        <td>Age</td>
-        <td>Grade</td>
+        <th>Name</th>
+        <th>Job title</th>
+        <th>Age</th>
+        <th>Grade</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="member in members">
+    <tr ng-repeat="member in members" ng-click="showReviews(member)">
         <td>
           {{ member.name}}
         </td>
@@ -24,6 +25,29 @@
         <td>
             {{ member.grade}}
         </td>
+        <td>
+            <button ng-if="teamsCtrl.activeTeam != null" ng-click="addToActiveTeam(member); $event.stopPropagation();" class="btn btn-default">
+                Add to <b>{{ teamsCtrl.activeTeam.name }}</b>
+            </button>
+        </td>
     </tr>
     </tbody>
 </table>
+
+<div class="pagination" bootstrap="3">
+    <ul class="pagination">
+        <li class="prev previous_page" ng-class="{disabled: pagination.current_page <= 1 }">
+            <a href="#"  ng-click="prevPage()">« Prev</a>
+        </li>
+
+
+        <li><a href="#">
+            {{pagination.current_page}} / {{pagination.total_pages}}
+        </a></li>
+
+        <li class="next next_page" ng-class="{disabled: pagination.current_page >=  pagination.total_pages }" >
+            <a rel="next"   ng-click="nextPage()" href="#">Next →</a>
+        </li>
+
+    </ul>
+</div>

@@ -6,7 +6,5 @@ teamApp.config ($httpProvider) ->
 
 teamApp.config ($routeProvider, $locationProvider) ->
   $locationProvider.html5Mode true
-  $routeProvider.when '/',  templateUrl: '/templates/team_list.html', controller: 'TeamListController'#,  activetab: 'dashboard'
-  $routeProvider.when '/search',  templateUrl: '/templates/search.html', controller: 'SearchController'#,  activetab: 'search'
-  $routeProvider.when '/dashboard', templateUrl: '/templates/dashboard.html', controller: 'DashboardController'
-  $routeProvider.when '/task_lists/:list_id', templateUrl: '/templates/task_list.html', controller: 'TodoListController'
+  $routeProvider.when '/',  templateUrl: '/templates/typeahead.html', controller: 'TeamListController'
+  $routeProvider.when '/search',  templateUrl: '/templates/search.html', controller: 'SearchController'

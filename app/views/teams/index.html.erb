@@ -1,0 +1,58 @@
+<div class="ng-cloak">
+  <div class="row" ng-controller="TeamListController as teamsCtrl">
+
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+      <div ng-view>
+
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pull-right right">
+
+      <div class="container">
+        <form ng-submit="addTeam()">
+
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="New team name" ng-model="teamName" data-non-blank>
+          <span class="input-group-btn">
+            <input type="submit" class="btn btn-primary" value="+" ng-disabled="!canAddTeam()">
+          </span>
+          </div>
+
+        </form>
+        <div class="row">
+          <div class="list-group">
+            <div ng-repeat="team in teamsCtrl.teams">
+
+
+              <a href="#" ng-class="{active: isActive(team) }" ng-click="activateTeam(team)"
+                 class="list-group-item">{{team.name}}</a>
+
+              <div class="members" ng-show="isActive(team)">
+                <div>
+                  <div>members</div>
+                </div>
+                <div class="right">
+                  <button ng-click="deleteTeam(team, $index)" class="btn btn-default btn-xs btn-danger"
+                          type="button">
+                    Delete team
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+

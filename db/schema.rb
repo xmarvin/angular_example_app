@@ -11,26 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130904153446) do
+ActiveRecord::Schema.define(version: 20140617092208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "task_lists", force: true do |t|
-    t.integer  "owner_id"
+  create_table "team_members", force: true do |t|
+    t.integer  "team_id",    null: false
+    t.integer  "user_id",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name"
   end
 
-  add_index "task_lists", ["owner_id"], name: "index_task_lists_on_owner_id", using: :btree
+  add_index "team_members", ["team_id"], name: "index_team_members_on_team_id", using: :btree
+  add_index "team_members", ["user_id"], name: "index_team_members_on_user_id", using: :btree
 
-  create_table "tasks", force: true do |t|
-    t.string   "description",                 null: false
-    t.integer  "priority"
-    t.date     "due_date"
-    t.boolean  "completed",   default: false, null: false
-    t.integer  "list_id",                     null: false
+  create_table "teams", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -46,9 +43,13 @@ ActiveRecord::Schema.define(version: 20130904153446) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "authentication_token"
+    t.string   "name",                                null: false
+    t.integer  "age"
+    t.string   "grade"
+    t.string   "position"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "authentication_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
