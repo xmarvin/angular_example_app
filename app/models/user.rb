@@ -11,4 +11,10 @@ class User < ActiveRecord::Base
   def first_list
     task_lists.first
   end
+
+  searchable do
+    text :name, :grade, :position
+    integer :age
+  end
+
 end

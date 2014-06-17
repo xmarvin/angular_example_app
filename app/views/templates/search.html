@@ -1,5 +1,5 @@
 <div>
-    <input class="form-control search-query" type="text" placeholder="Search..." >
+    <input class="form-control search-query" type="text" ng-model="searchText" placeholder="Search..." >
 </div>
 <table class="table bordered">
     <thead>
@@ -26,7 +26,7 @@
             {{ member.grade}}
         </td>
         <td>
-            <button ng-if="teamsCtrl.activeTeam != null" ng-click="addToActiveTeam(member); $event.stopPropagation();" class="btn btn-default">
+            <button ng-if="teamsCtrl.activeTeam != null" ng-click="addToActiveTeam(member); $event.stopPropagation();" class="btn btn-default btn-xs">
                 Add to <b>{{ teamsCtrl.activeTeam.name }}</b>
             </button>
         </td>

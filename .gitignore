@@ -15,3 +15,6 @@
 /log/*.log
 /tmp
 /config/database.yml
+solr/pids
+solr/datalog/sunspot-solr-development.log.lck
+log/sunspot-solr-development.log.lck

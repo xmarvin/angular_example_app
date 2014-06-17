@@ -2,13 +2,17 @@ class Api::UsersController < Api::BaseController
 
   def index
     page = params[:page] || 1
-    users = User.paginate(page: page, per_page: 20)
+    q = params[:q] || ''
+    search = User.search do
+      fulltext q
+      paginate page: page, per_page: 20
+    end.results
     render json: {
-        users: users,
+        users: search,
         pagination: {
-            current_page: users.current_page,
-            total_pages: users.total_pages,
-            total_entries: users.total_entries
+            current_page: search.current_page,
+            total_pages: search.total_pages,
+            total_entries: search.total_entries
         }
     }
   end

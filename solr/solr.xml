@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<solr persistent="false">
+  <cores adminPath="/admin/cores" host="${host:}" hostPort="${jetty.port:}">
+    <core name="default"     instanceDir="." dataDir="../tmp/solr/default/data"/>
+    <core name="development" instanceDir="." dataDir="../tmp/solr/development/data"/>
+    <core name="test"        instanceDir="." dataDir="../tmp/solr/test/data"/>
+    <core name="pids"        instanceDir="." dataDir="../tmp/pids"/>
+    <core name="data"        instanceDir="." dataDir="../tmp/solr/data"/>
+  </cores>
+</solr>
