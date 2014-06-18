@@ -3,10 +3,16 @@ angular.module('teamApp').controller "SearchController", ($scope, $timeout, Memb
     alert("There was a server error, please reload the page and try again.")
 
   @listsService = new Member(serverErrorHandler)
+  $scope.isLoading = false
+  $scope.enableReviews = {}
   $scope.members = []
   $scope.pagination = {}
 
-  $scope.showReviews = (member) =>
+  $scope.toggleReviews = (member) =>
+    $scope.enableReviews[member.id] = !$scope.enableReviews[member.id]
+
+  $scope.isShowReviews = (member) =>
+    $scope.enableReviews[member.id] is true
 
 
   filterTextTimeout = null
@@ -33,9 +39,11 @@ angular.module('teamApp').controller "SearchController", ($scope, $timeout, Memb
     $scope.pagination.current_page
 
   loadUsers = (page, q) =>
+    $scope.isLoading = true
     @listsService.search page, q, (res) ->
       $scope.members = res.users
       $scope.pagination = res.pagination
+      $scope.isLoading = false
 
   loadUsers(1, '')
 

@@ -1,4 +1,63 @@
-angular.module('teamApp').factory 'TeamService', ($resource, $http, TeamMemberService) ->
+angular.module('teamApp').factory 'TeamService', ($resource, $q, $http, TeamMemberService) ->
+  class Team
+    constructor: (attrs, errorHandler) ->
+      @attrs = attrs
+      @id = attrs.id
+      @name = attrs.name
+      @team_members_length = attrs.team_members_length
+
+      @_teamMembersService = new TeamMemberService(@id, errorHandler)
+      @_team_members = []
+      @_team_members_ids = []
+      @_team_members_deferred = null
+      @_is_team_members_loaded = false
+      @selectedMembers = []
+
+
+    team_members: =>
+      unless @_is_team_members_loaded
+        @getTeamMembers()
+      @_team_members || []
+
+    getTeamMembers: =>
+      need_request = @_team_members_deferred == null
+      @_team_members_deferred ||= $q.defer()
+
+      if @_is_team_members_loaded
+        @_team_members_deferred.resolve(@_team_members)
+      else if need_request
+        @_teamMembersService.all (res) =>
+          @_team_members = res
+          @_team_members_ids = $.map(res, (team_member) -> team_member.user_id)
+          @_is_team_members_loaded = true
+          @_team_members_deferred.resolve(@_team_members)
+
+      @_team_members_deferred.promise
+
+    deleteTeamMember: (team_member_index, successHandler) =>
+      team_member = @_team_members[team_member_index]
+      if team_member
+        @_teamMembersService.delete team_member, (res) =>
+          @_team_members.splice(team_member_index, 1)
+          @_team_members_ids ||= []
+          ind = @_team_members_ids.indexOf(team_member.user_id)
+          if ind >= 0
+            @_team_members_ids.splice(ind, 1)
+
+          @team_members_length = @_team_members_ids.length
+          successHandler(res) if successHandler
+
+
+    createTeamMember: (userId, successHandler) =>
+      @_teamMembersService.create { user_id: userId }, (team_member) =>
+        @_team_members.push(team_member)
+        @_team_members_ids.push(team_member.user_id)
+        @team_members_length = @_team_members_ids.length
+        successHandler(team_member) if successHandler
+
+    hasMember: (member) =>
+      member.id in @_team_members_ids
+
   class TeamService
     constructor: (errorHandler) ->
       @service = $resource('/api/teams/:id',
@@ -11,44 +70,27 @@ angular.module('teamApp').factory 'TeamService', ($resource, $http, TeamMemberSe
       defaults.patch = defaults.patch || {}
       defaults.patch['Content-Type'] = 'application/json'
 
-    all: (successCallback)=>
-      @service.query(successCallback, @errorHandler)
+    all: (successCallback) =>
+      @service.query (res) =>
+        res = $.map res, (attrs) => new Team(attrs, @errorHandler)
+        successCallback(res)
+      , @errorHandler
 
     create: (attrs, successHandler) =>
-      new @service(team: attrs).$save successHandler, @errorHandler
+      new @service(team: attrs).$save (res) ->
+        res = new Team(res)
+        successHandler(res)
+      , @errorHandler
 
     delete: (team, successHandler) =>
       new @service().$delete {id: team.id}, successHandler, @errorHandler
 
     loadMembersFor: (team) =>
-      team.team_members = []
-      teamMembersService = new TeamMemberService(team.id, @errorHandler)
-      teamMembersService.all (res) ->
-        team.team_members = res
-        team.team_members_ids = $.map(res, (team_member) -> team_member.user_id)
-        res
+#      team.team_members = []
+#      teamMembersService = new TeamMemberService(team.id, @errorHandler)
+#      teamMembersService.all (res) ->
+#        team.team_members = res
+#        team.team_members_ids = $.map(res, (team_member) -> team_member.user_id)
+#        res
 
     #Move to the Team model
-    createTeamMember: (team, userId, successHandler) =>
-      teamMembersService = new TeamMemberService(team.id, @errorHandler)
-
-      teamMembersService.create { user_id: userId }, (team_member) ->
-        team.team_members.unshift(team_member)
-        team.team_members_ids ||= []
-        team.team_members_ids.unshift(team_member.user_id)
-        team.team_members_length = team.team_members_ids.length
-        successHandler(team_member) if successHandler
-
-    deleteTeamMember: (team, team_member_index, successHandler) =>
-      teamMembersService = new TeamMemberService(team.id, @errorHandler)
-      team_member = team.team_members[team_member_index]
-      if team_member
-        teamMembersService.delete team_member, (res) ->
-          team.team_members.splice(team_member_index, 1)
-          team.team_members_ids ||= []
-          ind = team.team_members_ids.indexOf(team_member.user_id)
-          if ind >= 0
-            team.team_members_ids.splice(ind, 1)
-
-          team.team_members_length = team.team_members_ids.length
-          successHandler(res) if successHandler

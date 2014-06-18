@@ -20,7 +20,7 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService)
   $scope.teamName = ""
   $scope.addTeam = =>
     @teamsService.create name: $scope.teamName, (team) ->
-      $scope.teams.unshift(team)
+      $scope.teams.push(team)
       $scope.teamName = ""
 
   $scope.canAddTeam = ->
@@ -30,7 +30,6 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService)
 
   $scope.activateTeam = (team) =>
     $scope.activeTeam = team
-    @teamsService.loadMembersFor(team)
 
   $scope.deleteTeam = (team, index) =>
     @teamsService.delete team, () =>
@@ -43,18 +42,24 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService)
   $scope.isActive = (team) ->
     $scope.activeTeam == team
 
+
+  $scope.selectMember = (member) =>
+    $scope.activeTeam.selectedMembers.push(member)
+
+  $scope.resetMembers = () =>
+    $scope.activeTeam.selectedMembers = $scope.activeTeam.team_members()
+
   $scope.addToActiveTeam = (member) =>
     if $scope.activeTeam
-      @teamsService.createTeamMember $scope.activeTeam, member.id
+      $scope.activeTeam.createTeamMember member.id
     false
 
   $scope.deleteFromActiveTeam = (team, $index) =>
-    console.log $index
     if $scope.activeTeam
-      @teamsService.deleteTeamMember $scope.activeTeam, $index
+      $scope.activeTeam.deleteTeamMember $index
     false
 
   $scope.isMemberOfTeam = (member) =>
-    member.id in ($scope.activeTeam.team_members_ids || [])
+    $scope.activeTeam.hasMember(member)
 
   $scope

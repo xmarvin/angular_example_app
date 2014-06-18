@@ -4,7 +4,11 @@ class User < ActiveRecord::Base
 
   has_many :team_members
   has_many :teams, source: :team, through: :team_members
+  has_many :reviews
 
+  def as_json(attrs = {})
+    super include: [:reviews]
+  end
 
   def clear_authentication_token!
     update_attribute(:authentication_token, nil)

@@ -1,63 +1,86 @@
 <div>
-    <input class="form-control search-query" type="text" ng-model="searchText" placeholder="Search..." >
+    <input class="form-control search-query" type="search" ng-model="searchText" placeholder="Search...">
 </div>
-<table class="table bordered">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Job title</th>
-        <th>Age</th>
-        <th>Grade</th>
-        <th></th>
-    </tr>
-    </thead>
 
-    <tbody>
-    <tr ng-repeat="member in members" ng-click="showReviews(member)">
-        <td>
-          {{ member.name}}
-        </td>
-        <td>
-            {{ member.position}}
-        </td>
-        <td>
-            {{ member.age}}
-        </td>
-        <td>
-            {{ member.grade}}
-        </td>
-        <td>
-            <div ng-if="teamsCtrl.activeTeam != null">
+<div ng-if="isLoading" class="loading">Loading...</div>
+<div ng-if="!isLoading">
 
-                <div ng-if="isMemberOfTeam(member)">
-                    Member of <b>{{ teamsCtrl.activeTeam.name }}</b>
+    <table class="table bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Job title</th>
+            <th>Age</th>
+            <th>Grade</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat-start="member in members">
+            <td>
+               <button ng-click="toggleReviews(member)" class="btn btn-default btn-xs">{{ isShowReviews(member) ? '-' : '+' }}</button>   {{ member.name}}
+            </td>
+            <td>
+                {{ member.position}}
+            </td>
+            <td>
+                {{ member.age}}
+            </td>
+            <td>
+                {{ member.grade}}
+            </td>
+            <td>
+                <div ng-if="teamsCtrl.activeTeam != null">
+
+                    <div ng-if="isMemberOfTeam(member)">
+                        Member of <b>{{ teamsCtrl.activeTeam.name }}</b>
+                    </div>
+
+                    <button ng-if="!isMemberOfTeam(member)"
+                            ng-click="addToActiveTeam(member); $event.stopPropagation();"
+                            class="btn btn-default btn-xs">
+                        Add to <b>{{ teamsCtrl.activeTeam.name }}</b>
+                    </button>
+
                 </div>
 
-                <button ng-if="!isMemberOfTeam(member)"  ng-click="addToActiveTeam(member); $event.stopPropagation();" class="btn btn-default btn-xs">
-                    Add to <b>{{ teamsCtrl.activeTeam.name }}</b>
-                </button>
+            </td>
+        </tr>
+        <tr ng-repeat-end ng-if="isShowReviews(member)">
+            <td colspan="5">
+                <div ng-switch on="member.reviews.length == 0">
+                    <ul ng-switch-when="false">
+                        <li ng-repeat="review in member.reviews">
+                            {{ review.note }}
+                        </li>
+                    </ul>
+                    <div ng-switch-when="true">
+                       No reviews yet :(
+                    </div>
+                </div>
 
-            </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<div class="pagination" bootstrap="3">
-    <ul class="pagination">
-        <li class="prev previous_page" ng-class="{disabled: pagination.current_page <= 1 }">
-            <a href="#"  ng-click="prevPage()">« Prev</a>
-        </li>
+    <div class="pagination" bootstrap="3" ng-if="pagination.total_pages > 0">
+        <ul class="pagination">
+            <li class="prev previous_page" ng-class="{disabled: pagination.current_page <= 1 }">
+                <a href="#" ng-click="prevPage()">« Prev</a>
+            </li>
 
 
-        <li><a href="#">
-            {{pagination.current_page}} / {{pagination.total_pages}}
-        </a></li>
+            <li><a href="#">
+                {{pagination.current_page}} / {{pagination.total_pages}}
+            </a></li>
 
-        <li class="next next_page" ng-class="{disabled: pagination.current_page >=  pagination.total_pages }" >
-            <a rel="next"   ng-click="nextPage()" href="#">Next →</a>
-        </li>
+            <li class="next next_page" ng-class="{disabled: pagination.current_page >=  pagination.total_pages }">
+                <a rel="next" ng-click="nextPage()" href="#">Next →</a>
+            </li>
 
-    </ul>
+        </ul>
+    </div>
+
 </div>

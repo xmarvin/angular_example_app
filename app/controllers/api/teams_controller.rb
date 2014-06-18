@@ -1,6 +1,7 @@
 class Api::TeamsController < Api::BaseController
 
   def index
+
     teams = Team.all
     render json: teams
   end

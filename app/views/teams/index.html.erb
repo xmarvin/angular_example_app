@@ -1,6 +1,5 @@
 <div class="ng-cloak">
   <div class="row" ng-controller="TeamListController as teamsCtrl">
-
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
       <div ng-view>
 
@@ -31,33 +30,32 @@
                 <span class="badge">{{ team.team_members_length }}</span>
               </a>
 
-              <div class="members" ng-show="isActive(team)">
-                <div>
-                  <div ng-repeat="team_member in team.team_members" class="row">
+              <div class="team_info" ng-show="isActive(team)" >
+                <div class="members">
+                  <div ng-repeat="team_member in team.team_members()" class="row member" >
                     <div class="pull-left">
-                      {{team_member.user.name}}
+                      <a rel="popover" data-container="body" data-placement="left" data-content="
+                      {{ team_member.user.grade }} {{ team_member.user.position }}, {{ team_member.user.age }} years old
+                      " data-original-title="" title="" href="#">
+                        {{team_member.user.name}}
+                      </a>
                     </div>
 
                     <div class="pull-right">
                       <button ng-click="deleteFromActiveTeam(team, $index)" class="btn btn-default btn-xs btn-danger"
                               type="button">-</button>
                     </div>
-
+                  </div>
                 </div>
 
-                <div class="row">
+                <div class="row team-actions">
                 <div class="pull-right">
                   <button ng-click="deleteTeam(team, $index)" class="btn btn-default btn-xs btn-danger"
                           type="button">
                     Delete team
                   </button>
                 </div>
-
-
-
                 </div>
-
-              </div>
 
             </div>
 
