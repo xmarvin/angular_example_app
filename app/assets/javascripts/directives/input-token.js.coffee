@@ -12,7 +12,7 @@ angular.module('teamApp').directive 'inputToken', ->
       preventDuplicates: true
       resultsFormatter: (item) ->
         "<li>#{item.name}, #{item.grade} #{item.position}</li>"
-      minChars: 3
+      minChars: 2
       onAdd: (new_item)->
         return if scope.isOnMaintain
         scope.isOnMaintain = true
