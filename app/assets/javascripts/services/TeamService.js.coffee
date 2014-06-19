@@ -34,11 +34,11 @@ angular.module('teamApp').factory 'TeamService', ($resource, $q, $http, TeamMemb
       @_team_members_deferred.promise
 
     refreshTeamMembers: (for_insert, for_delete, successCallback) =>
-      @_is_team_members_loaded = false
-      @_team_members = []
-      @_team_members_ids = []
-      @_team_members_deferred = null
       @_teamMembersService.refresh {for_insert_ids: for_insert, for_delete_ids: for_delete}, () =>
+        @_is_team_members_loaded = false
+        @_team_members = []
+        @_team_members_ids = []
+        @_team_members_deferred = null
         @getTeamMembers()
         successCallback() if successCallback
 

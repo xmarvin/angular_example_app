@@ -4,4 +4,13 @@ development:
     port: 8982
     log_level: INFO
     path: /solr/development
-    
+
+production:
+  solr:
+    scheme: 'https'
+    hostname: 97a04a.hosted-solr.com
+    port: 443
+    path: '/4665a9764de-angular-test/core'
+    userinfo: '4665a9764de-angular-test:e41461d1b53'
+    #url: https://4665a9764de-angular-test:e41461d1b53@97a04a.hosted-solr.com/4665a9764de-angular-test/core
+
