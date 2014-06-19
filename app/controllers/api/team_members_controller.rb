@@ -14,7 +14,16 @@ class Api::TeamMembersController < Api::BaseController
     else
       render json: team_member.errors.full_messages, status: 400
     end
+  end
 
+  def refresh
+    for_insert_ids = Array.wrap(params[:for_insert_ids])
+    for_insert_ids.each do |user_id|
+      @team.team_members.create(user_id: user_id)
+    end
+    for_delete_ids = Array.wrap(params[:for_delete_ids])
+    @team.team_members.where(id: for_delete_ids).destroy_all
+    render nothing: true
   end
 
   def destroy

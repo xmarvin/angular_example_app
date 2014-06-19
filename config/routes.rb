@@ -3,7 +3,11 @@ Todo::Application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :teams do
-      resources :team_members
+      resources :team_members do
+        collection do
+          post :refresh
+        end
+      end
     end
     resources :users, only: :index
   end

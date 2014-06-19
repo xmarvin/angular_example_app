@@ -6,12 +6,11 @@ angular.module('teamApp').factory 'TeamService', ($resource, $q, $http, TeamMemb
       @name = attrs.name
       @team_members_length = attrs.team_members_length
 
-      @_teamMembersService = new TeamMemberService(@id, errorHandler)
+      @_teamMembersService = new TeamMemberService(@id, () -> errorHandler() )
       @_team_members = []
       @_team_members_ids = []
       @_team_members_deferred = null
       @_is_team_members_loaded = false
-      @selectedMembers = []
 
 
     team_members: =>
@@ -22,7 +21,6 @@ angular.module('teamApp').factory 'TeamService', ($resource, $q, $http, TeamMemb
     getTeamMembers: =>
       need_request = @_team_members_deferred == null
       @_team_members_deferred ||= $q.defer()
-
       if @_is_team_members_loaded
         @_team_members_deferred.resolve(@_team_members)
       else if need_request
@@ -31,8 +29,20 @@ angular.module('teamApp').factory 'TeamService', ($resource, $q, $http, TeamMemb
           @_team_members_ids = $.map(res, (team_member) -> team_member.user_id)
           @_is_team_members_loaded = true
           @_team_members_deferred.resolve(@_team_members)
+          @team_members_length = @_team_members_ids.length
 
       @_team_members_deferred.promise
+
+    refreshTeamMembers: (for_insert, for_delete, successCallback) =>
+      @_is_team_members_loaded = false
+      @_team_members = []
+      @_team_members_ids = []
+      @_team_members_deferred = null
+      @_teamMembersService.refresh {for_insert_ids: for_insert, for_delete_ids: for_delete}, () =>
+        @getTeamMembers()
+        successCallback() if successCallback
+
+
 
     deleteTeamMember: (team_member_index, successHandler) =>
       team_member = @_team_members[team_member_index]
@@ -77,20 +87,10 @@ angular.module('teamApp').factory 'TeamService', ($resource, $q, $http, TeamMemb
       , @errorHandler
 
     create: (attrs, successHandler) =>
-      new @service(team: attrs).$save (res) ->
+      new @service(team: attrs).$save (res) =>
         res = new Team(res)
         successHandler(res)
       , @errorHandler
 
     delete: (team, successHandler) =>
       new @service().$delete {id: team.id}, successHandler, @errorHandler
-
-    loadMembersFor: (team) =>
-#      team.team_members = []
-#      teamMembersService = new TeamMemberService(team.id, @errorHandler)
-#      teamMembersService.all (res) ->
-#        team.team_members = res
-#        team.team_members_ids = $.map(res, (team_member) -> team_member.user_id)
-#        res
-
-    #Move to the Team model

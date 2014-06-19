@@ -12,6 +12,8 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService)
       $scope.activateTeam $scope.teams[0]
 
   @teamsService = new TeamService(serverErrorHandler)
+  $scope.selectedMembers = []
+  $scope.selectedMembersChanged = false
 
   @teamsService.all (res) ->
     $scope.teams = res
@@ -28,9 +30,6 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService)
 
   $scope.activeTeam = null
 
-  $scope.activateTeam = (team) =>
-    $scope.activeTeam = team
-
   $scope.deleteTeam = (team, index) =>
     @teamsService.delete team, () =>
       $scope.teams.splice index, 1
@@ -42,21 +41,48 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService)
   $scope.isActive = (team) ->
     $scope.activeTeam == team
 
+  $scope.unselectMember = (user) =>
+    $scope.selectedMembers = $scope.selectedMembers.filter (element) ->
+      element.user.id != user.id
+    $scope.selectedMembersChanged = true
 
   $scope.selectMember = (member) =>
-    $scope.activeTeam.selectedMembers.push(member)
+    if member.user is undefined
+      member = { id: null, user: member }
+
+    $scope.selectedMembers.push(member)
+    $scope.selectedMembersChanged = true
 
   $scope.resetMembers = () =>
-    $scope.activeTeam.selectedMembers = $scope.activeTeam.team_members()
+    $scope.selectedMembers = []
+    $scope.activeTeam.getTeamMembers().then (ts) ->
+      $scope.selectedMembers = $.map ts, (el) -> el
+    $scope.selectedMembersChanged = false
+
+  $scope.refreshMembers = () =>
+    $scope.selectedMembersChanged = false
+    existent_ids = $.map $scope.selectedMembers, (el) -> el.id
+    members_for_insert = $scope.selectedMembers.filter((element) -> element.id is null).map((el) -> el.user.id)
+    members_for_delete = []
+    for element, index in $scope.activeTeam.team_members()
+      members_for_delete.push(element.id) if element.id != null and element.id not in existent_ids
+
+    $scope.activeTeam.refreshTeamMembers members_for_insert, members_for_delete, ->
+      $scope.resetMembers()
+
+  $scope.activateTeam = (team) =>
+    $scope.activeTeam = team
+    $scope.resetMembers()
 
   $scope.addToActiveTeam = (member) =>
     if $scope.activeTeam
-      $scope.activeTeam.createTeamMember member.id
-    false
+      $scope.activeTeam.createTeamMember member.id, ->
+        $scope.resetMembers()
 
   $scope.deleteFromActiveTeam = (team, $index) =>
     if $scope.activeTeam
-      $scope.activeTeam.deleteTeamMember $index
+      $scope.activeTeam.deleteTeamMember $index, ->
+        $scope.resetMembers()
     false
 
   $scope.isMemberOfTeam = (member) =>

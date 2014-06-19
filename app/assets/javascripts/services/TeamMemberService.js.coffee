@@ -1,6 +1,7 @@
 angular.module('teamApp').factory 'TeamMemberService', ($resource, $http) ->
   class TeamMemberService
     constructor: (teamId, errorHandler) ->
+      @teamId = teamId
       @service = $resource('/api/teams/:team_id/team_members/:id',
         {team_id: teamId, id: '@id'},
         {update: {method: 'PATCH'}})
@@ -19,3 +20,6 @@ angular.module('teamApp').factory 'TeamMemberService', ($resource, $http) ->
 
     delete: (team_member, successHandler) =>
       new @service().$delete {id: team_member.id}, successHandler, @errorHandler
+
+    refresh: (data, successCallback) ->
+      $http.post("/api/teams/#{@teamId}/team_members/refresh", data).success(successCallback);
