@@ -7,7 +7,7 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService,
     alert(err)
 
   notifyResetMembers = ->
-    $scope.$broadcast 'setSelectedMembers', $scope.activeTeam
+    $scope.$broadcast 'setSelectedMembers'
 
   resetActiveTeam = ->
     if $scope.activeTeam == null && $scope.teams.length > 0
@@ -42,7 +42,7 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService,
     $scope.activeTeam = team
     activeTeamService.setTeam(team)
 
-  $scope.addToActiveTeam = (member) =>
+  $scope.addToActiveTeam = (e, member) =>
     if $scope.activeTeam
       $scope.activeTeam.createTeamMember member.id, ->
         notifyResetMembers()
@@ -53,11 +53,10 @@ angular.module('teamApp').controller "TeamListController", ($scope, TeamService,
         notifyResetMembers()
     false
 
-  $scope.isMemberOfTeam = (member) =>
-    $scope.activeTeam.hasMember(member)
-
   @teamsService.all (res) ->
     $scope.teams = res
     resetActiveTeam()
+
+  $scope.$on 'addToActiveTeam', $scope.addToActiveTeam
 
   $scope

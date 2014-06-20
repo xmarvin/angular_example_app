@@ -1,12 +1,11 @@
 <div class="ng-cloak">
-  <div class="row" ng-controller="TeamListController as teamsCtrl">
+  <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
       <div ng-view>
-
       </div>
     </div>
 
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pull-right right">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pull-right right" ng-controller="TeamListController">
 
       <div class="container">
         <form ng-submit="addTeam()" style="margin-bottom: 10px;">
@@ -21,7 +20,7 @@
 
         <div class="row">
           <div class="list-group">
-            <div ng-repeat="team in teamsCtrl.teams">
+            <div ng-repeat="team in teams">
 
 
               <a href="#" ng-class="{active: isActive(team) }" ng-click="activateTeam(team)"

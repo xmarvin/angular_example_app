@@ -1,4 +1,4 @@
-angular.module('teamApp').controller "SearchController", ($scope, $timeout, Member) ->
+angular.module('teamApp').controller "SearchController", ($rootScope,$scope, $timeout, Member, activeTeamService) ->
   serverErrorHandler = ->
     alert("There was a server error, please reload the page and try again.")
 
@@ -44,6 +44,16 @@ angular.module('teamApp').controller "SearchController", ($scope, $timeout, Memb
       $scope.members = res.users
       $scope.pagination = res.pagination
       $scope.isLoading = false
+
+  $scope.addToActiveTeam = (member) ->
+    $rootScope.$broadcast 'addToActiveTeam', member
+
+  $scope.activeTeam = null
+  $scope.onTeamChanged = () ->
+    $scope.activeTeam = activeTeamService.team
+  $scope.onTeamChanged()
+
+  $scope.$on 'activeTeamChanged', $scope.onTeamChanged
 
   loadUsers(1, '')
 

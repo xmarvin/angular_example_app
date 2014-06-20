@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Team list</title>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" media="screen" rel="stylesheet" />
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= csrf_meta_tags %>
+</head>
+<body ng-app="teamApp">
+
+  <div class="container">
+    <%= render "layouts/navigation" %>
+    <%= yield %>
+  </div>
+  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js" %>
+</body>
+</html>
