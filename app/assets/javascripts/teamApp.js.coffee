@@ -1,4 +1,4 @@
-teamApp = angular.module('teamApp', ['ngResource', 'ngRoute', 'mk.editablespan', 'ui.sortable'])
+teamApp = angular.module('teamApp', ['ngResource', 'ngRoute'])
 
 teamApp.config ($httpProvider, $parseProvider) ->
   authToken = $("meta[name=\"csrf-token\"]").attr("content")
