@@ -17,9 +17,10 @@ angular.module('teamApp').controller "TypeAheadController", ($scope, activeTeamS
 
   $scope.resetMembers = () =>
     $scope.selectedMembers = []
-    $scope.activeTeam.getTeamMembers().then (ts) ->
-      $scope.selectedMembers = $.map ts, (el) -> el
-    $scope.selectedMembersChanged = false
+    if $scope.activeTeam
+      $scope.activeTeam.getTeamMembers().then (ts) ->
+        $scope.selectedMembers = $.map ts, (el) -> el
+      $scope.selectedMembersChanged = false
 
   $scope.refreshMembers = () =>
     $scope.selectedMembersChanged = false
@@ -37,7 +38,8 @@ angular.module('teamApp').controller "TypeAheadController", ($scope, activeTeamS
     $scope.resetMembers()
 
   $scope.$on 'activeTeamChanged', $scope.onTeamChanged
-  $scope.$on 'setSelectedMembers', $scope.resetMembers
+  $scope.$on 'setSelectedMembers', ->
+    $scope.resetMembers()
 
 
   $scope.onTeamChanged()
