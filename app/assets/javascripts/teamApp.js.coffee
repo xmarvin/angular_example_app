@@ -7,5 +7,5 @@ teamApp.config ($httpProvider, $parseProvider) ->
 
 teamApp.config ($routeProvider, $locationProvider) ->
   $locationProvider.html5Mode true
-  $routeProvider.when '/',  templateUrl: '/templates/typeahead.html'
+  $routeProvider.when '/',  templateUrl: '/templates/typeahead.html', controller: 'TypeAheadController'
   $routeProvider.when '/search',  templateUrl: '/templates/search.html', controller: 'SearchController'

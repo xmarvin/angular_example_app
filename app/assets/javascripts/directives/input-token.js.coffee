@@ -8,7 +8,7 @@ angular.module('teamApp').directive 'inputToken', ->
   link: (scope, element, attrs) ->
     $(element).tokenInput "/api/users",
       jsonContainer: 'users'
-      theme:"facebook",
+      theme: "facebook",
       preventDuplicates: true
       resultsFormatter: (item) ->
         "<li>#{item.name}, #{item.grade} #{item.position}</li>"

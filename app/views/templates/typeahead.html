@@ -1,7 +1,7 @@
-<div ng-if="teamsCtrl.activeTeam == null">
+<div ng-if="activeTeam == null">
     No active team :(
 </div>
 
-<div ng-if="teamsCtrl.activeTeam" ng-include src="'/templates/typeahead_input.html'">
+<div ng-if="activeTeam" ng-include src="'/templates/typeahead_input.html'">
 </div>
 
